@@ -1,0 +1,17 @@
+db.publis.count() # Vérifier le nombre de documents importés.
+db.publis.find().limit(20) # Prévisualiser les 20 premiers documents.
+db.publis.find({ type: 'Book'}) # Lister tous les livres (type 'Book').
+db.publis.find({ year: {"$gte" : 2011} }) # Lister les publications depuis 2011.
+db.publis.find({ $and: [{year: {$eq: 2011}}, {year: {$eq: 2013}}]}) # Lister toutes les publications de 2011 et 2013.
+db.publis.find({ $or: [{year: {$eq: 2011}}, {year: {$eq: 2013}}]}) # Lister toutes les publications de 2011 ou 2013.
+db.publis.find({ authors: {$size: 3} }) # Lister les publications ayant 3 auteurs.
+db.publis.find({ $and : [{ year: {"$gte": 2014} }, { type: 'Book'}]}) # Lister les livres publiés depuis 2014.
+db.publis.find({ authors: {$eq: "Toru Ishida"} }) # Lister les publications de l'auteur "Toru Ishida".
+db.publis.distinct("publisher") # Lister tous les éditeurs (type 'publisher') distincts.
+db.publis.distinct("authors") # Lister tous les auteurs distincts.
+db.publis.aggregate( [ { $match : { authors: {$eq: "Toru Ishida"} } }, { $sort : {"name":1, "pages.start":1} }] ) # Trier les publications de 'Toru Ishida' par titre de livre et par page de début.
+db.publis.find({ authors: {$eq: "Toru Ishida"} }).count() # Compter le nombre de ses publications.
+db.publis.aggregate( [{ $match: { year: {"$gte" : 2011} }}, { $group : {"_id" : "$type", "total" : {$sum : 1} } }] ) # Compter le nombre de publications depuis 2011 et par type.
+db.publis.aggregate( [{$unwind : "$authors"}, { $group : {"_id" : "$authors", "total" : {$sum : 1} } }, { $sort : { "total" : 1 } }] )
+
+
